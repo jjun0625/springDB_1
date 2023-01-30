@@ -5,12 +5,14 @@ import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ItemServiceV1 implements ItemService {
 
@@ -18,6 +20,8 @@ public class ItemServiceV1 implements ItemService {
 
     @Override
     public Item save(Item item) {
+
+        log.info("akjsdhflkajshdfjklahsdflk");
         return itemRepository.save(item);
     }
 
@@ -35,4 +39,12 @@ public class ItemServiceV1 implements ItemService {
     public List<Item> findItems(ItemSearchCond cond) {
         return itemRepository.findAll(cond);
     }
+
+    @Override
+    public List<Item> findAllItems() {
+
+        return itemRepository.findAllItems();
+    }
+
+
 }

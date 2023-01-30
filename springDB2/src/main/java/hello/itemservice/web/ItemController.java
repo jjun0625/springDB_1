@@ -5,58 +5,54 @@ import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import hello.itemservice.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@Controller
+@Slf4j
+@RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
 
-    @GetMapping
-    public String items(@ModelAttribute("itemSearch") ItemSearchCond itemSearch, Model model) {
-        List<Item> items = itemService.findItems(itemSearch);
-        model.addAttribute("items", items);
-        return "items";
+    @GetMapping("/")
+    public List<Item> home() {
+        try {
+            return itemService.findAllItems();
+        } catch (NullPointerException e) {
+            log.info("error", e);
+            return null;
+        }
+
     }
+
+    @PostMapping("/addItem")
+    public Item addItem(@RequestBody Item item) {
+
+        return itemService.save(item);
+    }
+
+    @PostMapping("/update/{itemId}")
+    public String updateItem(
+            @PathVariable long itemId,
+            @RequestBody ItemUpdateDto itemUpdateDto) {
+        log.info("itemId={}, itemUpdateDto={}", itemId, itemUpdateDto);
+        itemService.update(itemId, itemUpdateDto);
+        return "ok";
+    }
+
 
     @GetMapping("/{itemId}")
-    public String item(@PathVariable long itemId, Model model) {
-        Item item = itemService.findById(itemId).get();
-        model.addAttribute("item", item);
-        return "item";
+    public Item item(@PathVariable long itemId) {
+        return itemService.findById(itemId).get();
     }
 
-    @GetMapping("/add")
-    public String addForm() {
-        return "addForm";
-    }
-
-    @PostMapping("/add")
-    public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
-        Item savedItem = itemService.save(item);
-        redirectAttributes.addAttribute("itemId", savedItem.getId());
-        redirectAttributes.addAttribute("status", true);
-        return "redirect:/items/{itemId}";
-    }
-
-    @GetMapping("/{itemId}/edit")
-    public String editForm(@PathVariable Long itemId, Model model) {
-        Item item = itemService.findById(itemId).get();
-        model.addAttribute("item", item);
-        return "editForm";
-    }
-
-    @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @ModelAttribute ItemUpdateDto updateParam) {
-        itemService.update(itemId, updateParam);
-        return "redirect:/items/{itemId}";
+    @PostMapping("/search")
+    public List<Item> searchItems(@RequestBody ItemSearchCond itemSearchCond) {
+        return itemService.findItems(itemSearchCond);
     }
 
 }
