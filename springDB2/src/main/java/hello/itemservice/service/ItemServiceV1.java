@@ -21,7 +21,6 @@ public class ItemServiceV1 implements ItemService {
     @Override
     public Item save(Item item) {
 
-        log.info("akjsdhflkajshdfjklahsdflk");
         return itemRepository.save(item);
     }
 

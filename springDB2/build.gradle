@@ -8,6 +8,8 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+ext["hibernate.version"] = "5.6.9.Final"
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -20,13 +22,20 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //JPA 추가
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    //MyBatis 추가
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //JdbcTemplate 추가
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 //H2 데이터베이스 추가
+
     runtimeOnly 'com.h2database:h2'
     //테스트에서 lombok 사용
     testCompileOnly 'org.projectlombok:lombok'
